@@ -1,2 +1,2 @@
-# adminWebsite
-Admin Website, using flask, mongo, json etj.
+# alStores-Flask
+This is the same Al-stores website, but this project is build on Flask

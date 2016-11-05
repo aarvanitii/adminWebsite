@@ -1,0 +1,36 @@
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # A hypothetical login form that uses Flask-WTF
+    form = LoginForm(request.form)
+    #user = null
+    # Validate form input
+    if form.validate_on_submit():
+
+        # Retrieve the user from the hypothetical datastore
+        if form.username.data == user_json['username']:
+            user = user_json
+            print(user['id'])
+
+            # Compare passwords (use password hashing production)
+            if form.password.data == user_json['password']:
+                # Keep the user info in the session using Flask-Login
+                login_user(user)
+
+                # Tell Flask-Principal the identity changed
+                identity_changed.send(current_app._get_current_object(),
+                                    identity=Identity(user['id']))
+                print(current_user.is_authenticated)
+                return redirect('/')    
+
+    return render_template('login.html', form=form)
+
+
+# @app.route('/admin')
+# @admin_permission.require()
+# def do_admin_index():
+#     return Response('Only if you are an admin')
+
+# @app.route('/articles')
+# def do_articles():
+#     with admin_permission.require():
+#         return Response('Only if you are an admin')
