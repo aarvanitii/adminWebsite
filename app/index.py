@@ -1,70 +1,56 @@
-from flask import Flask, url_for, render_template, jsonify,\
-    request, Response, current_app, session, redirect
-from flask_login import LoginManager, login_user, logout_user,\
-    login_required, current_user
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
-from wtforms.validators import Required, Email
-from flask_principal import Principal, Permission, RoleNeed, Identity, AnonymousIdentity,\
-    identity_changed
-from pymongo import MongoClient
+from flask import Flask, render_template, url_for, request, session, redirect, jsonify
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
-client = MongoClient()
-db = client.data_test
-collection = db.test_collection
-Principal(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
 
-admin_permission = Permission(RoleNeed('admin'))
-app.secret_key = '123214124'
+app.config['MONGO_DBNAME'] = 'mongologinexample'
+
+mongo = PyMongo(app)
+@app.route('/')
+def index():
+    if 'username' in session:
+        return redirect(url_for('admin'))
+
+    return render_template('index.html')
+
+@app.route('/admin')
+def admin():
+    users = mongo.db.users
+    userlist = users.find({})
+    userSession = users.find_one({'username': session['username']})
+    return render_template('admin.html', userlist=userlist, userSession=userSession)
+
+@app.route('/login', methods=['POST'])
+def login():
+    users = mongo.db.users
+    login_user = users.find_one({'username': request.form['username']})
+
+    if login_user:
+        if request.form['pass'] == login_user['password']:
+            session['username'] = request.form['username']
+            return redirect(url_for('admin'))
+
+    return 'Invalid Username/Password'
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('index'))
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        users = mongo.db.users
+        existing_username = users.find_one({'username': request.form['username']})
+
+        if existing_username is None:
+            existing_email = users.find_one({'email': request.form['email']})
+            
+            if existing_email is None:
+                users.insert({'fullname': request.form['fullname'], 'email': request.form['email'], 'username': request.form['username'], 'password': request.form['pass'] })
+                return redirect(url_for('index'))
+            return 'Email Already exists'
+        return 'That username already exists'
 
 def create_app():
     return app
-
-users = [
-        ('arvanitgrainca.ag@gmail.com', 'matt', 'password', ['admin'], True),
-        ]
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
-
-class LoginForm(FlaskForm):
-    username = StringField()
-    password = PasswordField()
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # Here we use a class of some kind to represent and validate our
-    # client-side form data. For example, WTForms is a library that will
-    # handle this for us, and we use a custom LoginForm to validate.
-    form = LoginForm()
-    if form.validate_on_submit():
-        # Login and validate the user.
-        # user should be an instance of your `User` class
-        login_user(user)
-
-        flask.flash('Logged in successfully.')
-
-        next = flask.request.args.get('next')
-        # next_is_valid should check if the user has valid
-        # permission to access the `next` url
-        if not next_is_valid(next):
-            return flask.abort(400)
-
-        return flask.redirect(next or flask.url_for('index'))
-    return flask.render_template('login.html', form=form)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/superadmin')
-def superadmin():
-    return render_template('superadmin.html')
-
-@app.errorhandler(404)
-def not_found(error):
-    return render_template('error.html'), 404
