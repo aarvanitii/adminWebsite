@@ -6,9 +6,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Admin Dashboard</title>
-	<meta name="description" content="Cardio is a free one page template made exclusively for Codrops by Luka Cvetinovic" />
-	<meta name="keywords" content="html template, css, free, one page, gym, fitness, web design" />
-	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<meta name="description" content="Cardio is a free one page template made by Arvanit Grainca" />
+	<meta name="keywords" content="html template, css, free, Dashboard, web design" />
+	<meta name="author" content="Arvanit Grainca" />
 	<!-- Favicons (created with http://realfavicongenerator.net/)-->
 	<link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='img/favicons/apple-touch-icon-57x57.png')}}">
 	<link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='img/favicons/apple-touch-icon-60x60.png')}}">
@@ -19,38 +19,85 @@
 	<meta name="msapplication-TileColor" content="#00a8ff">
 	<meta name="msapplication-config" content="{{ url_for('static', filename='img/favicons/browserconfig.xml') }}">
 	<meta name="theme-color" content="#ffffff">
-	<!-- Normalize -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/normalize.css') }}">
 	<!-- Bootstrap -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.css') }}">
-	<!-- Owl -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/owl.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.css.map') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css.map') }}">			
 	<!-- Animate.css -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/animate.css') }}">
 	<!-- Font Awesome -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='fonts/font-awesome-4.1.0/css/font-awesome.min.css') }}">
-	<!-- Elegant Icons -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='fonts/eleganticons/et-icons.css') }}">
-	<!-- Main style -->
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cardio.css') }}">
-
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">
-
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='fonts/eleganticons/et-icons.css') }}">
+	<!-- Custom Icons -->	
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">	
 </head>
 	<div class="preloader">
 		<img src="{{ url_for('static', filename='img/loader.gif') }}" alt="Preloader image">
 	</div>
 <body>
-			<!-- Brand and toggle get grouped for better mobile display -->
-    <div id="content-fluid">{% block content %}{% endblock %}</div>
-	<!-- Scripts -->
+    <nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/admin">Dashboard</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@{{session.username}} <span class="arrow_carrot-down"></span></a>
+            <ul class="dropdown-menu">
+                <li>
+                <form action="{{ url_for('index') }}">
+                    <button type="submit" class="btn btn-link ">Visit Website</button>
+                </form>                      
+                </li>
+                <form method=POST action="{{ url_for('show_user_profile',username=session.username) }}">
+                    <button type="submit" class="btn btn-link ">Profile</button>
+                </form>
+                <li role="separator" class="divider"></li>
+                <li>
+                <form method=POST action="{{ url_for('logout') }}">
+                    <button type="submit" class="btn btn-link ">Log out</button>
+                </form>                     
+                </li>
+            </ul>
+            </li>
+        </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+    </nav>
+    <div class="row">
+        <div class="col-md-2 border-right-grey">
+            <div class="btn-group-vertical" role="group" aria-label="...">
+                <ul class="nav">
+                    <li><p class="navbar-brand">Tools</p></li>
+                </ul>    
+                <ul class="nav navbar-right">
+                <li><a href="{{ url_for('users') }}">Users</a></li>
+                <li><a href="{{ url_for('post') }}">Post</a></li>
+                <li><a href="#">Add user</a></li>
+                <li><a href="#">Add user</a></li>
+                <li><a href="#">Add user</a></li>
+                </ul>                        
+            </div>
+        </div>
+        <div class="col-md-offset-1 col-md-8">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
 	<script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js')}}"></script>
 	<script src="{{ url_for('static', filename='js/owl.carousel.min.js')}}"></script>
 	<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
 	<script src="{{ url_for('static', filename='js/wow.min.js')}}"></script>
 	<script src="{{ url_for('static', filename='js/typewriter.js')}}"></script>
 	<script src="{{ url_for('static', filename='js/jquery.onepagenav.js')}}"></script>
-	<script src="{{ url_for('static', filename='js/main.js')}}"></script>
+	<script src="{{ url_for('static', filename='js/main.js')}}"></script>    
 </body>
-
-</html>

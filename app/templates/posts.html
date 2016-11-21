@@ -1,0 +1,17 @@
+{% extends "/layout/main.html" %}
+{% block page %}Posts{% endblock %}
+
+{% block content %}
+{% for post in postslist %}
+<div class="row">
+<div class="col-sm-12 border-grey">
+    <h3>{{ post.title }}</h3>
+    <hr>
+    <p>{{ post.text}}</p>
+    <p class="text-right">Posted: {{ post.date }}, Author: @{{ post.author }}</p>
+</div>
+</div>
+<br>
+{% endfor %}
+
+{% endblock %}

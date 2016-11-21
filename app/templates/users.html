@@ -1,0 +1,44 @@
+{% extends "/layout/base.html" %}
+
+{% block content %}
+<h1>Users</h1>
+<hr>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <tr><th>Full name</th><th>Username</th><th>Edit</th><th>Delete</th></tr>
+        {% for user in userlist %}
+        <tr><td>{{ user.fullname }}</td><td>@{{ user.username }}</td>
+        <td>
+            <span class="icon_pencil-edit"></span>
+        </td>
+        <td>
+            {% if userSession.username is equalto 'aarvanitii' %}
+            <form method=POST action="{{ url_for('delete_user',username=user.username) }}">
+                <button type="submit" class="btn btn-link "><span class="icon_close"></span></button>
+            </form> 
+            {% endif %}        
+        </td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<h1>Add user</h1>
+<hr>
+<div class="col-sm-6 col-sm-offset-2">    
+    <form method=POST action="{{ url_for('register') }}">
+        <div class="form-group">
+            <input class="form-control" type="text" class="form-control" name="fullname" placeholder="Full Name">
+        </div>                
+        <div class="form-group">
+            <input class="form-control" type="text" class="form-control" name="email" placeholder="Email">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" class="form-control" name="username" placeholder="Username">
+        </div>                
+        <div class="form-group">
+            <input class="form-control" type="password" class="form-control" name="pass" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-info active">Add</button>
+    </form>    
+</div> 
+{% endblock %}

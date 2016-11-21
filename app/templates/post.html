@@ -1,0 +1,47 @@
+{% extends "/layout/base.html" %}
+
+{% block content %}
+<h1>Post</h1>
+<hr>
+<div class="row">
+    <div class="col-sm-7 border-right">
+        <h1>Upload a post</h1>
+        <br>
+        <form method=POST action="{{ url_for('upload_post') }}">
+            <div class="form-group">
+                <input class="form-control" type="text" class="form-control" name="title" placeholder="Title: ">
+            </div>                
+            <div class="form-group">
+                <textarea class="form-control" name="text" placeholder="Text" rows="15"></textarea>
+            </div>               
+            <button type="submit" class="btn btn-info active">Post</button>
+        </form>    
+    </div>
+
+    <div class="col-sm-4 col-sm-offset-1">
+        <h1>Upload a photo</h1>
+    </div>
+</div>
+<br>
+<div class="row">
+    <h1>Your posts</h1>
+    <br>    
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <tr><th>Title</th><th>Author</th><th>Edit</th><th>Delete</th></tr>
+            {% for post in postslist %}
+            <tr><td>{{ post.title }}</td><td>@{{ post.author }}</td>
+            <td>
+                <span class="icon_pencil-edit"></span>
+            </td>
+            <td>
+                <form method=POST action="{{ url_for('delete_post',title=post.title) }}">
+                    <button type="submit" class="btn btn-link "><span class="icon_close"></span></button>
+                </form>         
+            </td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+{% endblock %}
